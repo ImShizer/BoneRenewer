@@ -1,0 +1,18 @@
+# Pyinstaller
+dist/
+build/
+build_env/
+*.spec
+
+# Build artifacts
+*.pyc
+__pycache__/
+*.venv
+*.env
+
+# Binary files
+*.stl
+*.dcm
+.DCM
+DCM/
+web/output/
