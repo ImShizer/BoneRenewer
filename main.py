@@ -21,7 +21,7 @@ class Api:
     def ask_folder_path(self):
         """Opens the native folder selection dialog"""
         result = webview.windows[0].create_file_dialog(
-            webview.FileDialog.FOLDER, 
+            webview.FOLDER_DIALOG, 
             directory=get_user_dir()
         )
         if result and len(result) > 0:
@@ -59,7 +59,7 @@ class Api:
 
     def export_stl(self):
         result = webview.windows[0].create_file_dialog(
-            webview.FileDialog.SAVE, 
+            webview.SAVE_DIALOG, 
             directory=get_user_dir(),
             save_filename='solid_bone.stl',
             file_types=('STL Files (*.stl)', 'All Files (*.*)')
