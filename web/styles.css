@@ -20,8 +20,15 @@ body {
     border-bottom: 1px solid #e5e7eb;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 30px;
     z-index: 10;
+}
+
+.top-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .btn-outline {
@@ -40,6 +47,38 @@ body {
     background: #eff6ff;
 }
 
+/* Purple outline for NIfTI import */
+.btn-outline-purple {
+    border-color: #8b5cf6;
+    color: #8b5cf6;
+}
+
+.btn-outline-purple:hover {
+    background: #f5f3ff;
+}
+
+/* Advanced Button (Lime text, white bg, lime border) */
+.btn-advanced {
+    background: #ffffff;
+    color: #84cc16;
+    border: 2px solid #84cc16;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-advanced:hover {
+    background: #f7fee7;
+}
+
+.btn-advanced.active {
+    background: #84cc16;
+    color: #ffffff;
+}
+
 /* Main container */
 .main-container {
     display: flex;
@@ -52,11 +91,18 @@ body {
     width: 320px;
     background: #ffffff;
     border-right: 1px solid #e5e7eb;
-    padding: 30px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    justify-content: space-between;
+    overflow-y: auto;
     z-index: 5;
+}
+
+.panel-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .panel-title {
@@ -74,7 +120,7 @@ body {
 }
 
 .form-label {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: #6b7280;
     text-transform: uppercase;
@@ -82,7 +128,7 @@ body {
 }
 
 .form-control {
-    padding: 12px 16px;
+    padding: 12px 14px;
     border: 1px solid #d1d5db;
     border-radius: 8px;
     font-size: 0.95rem;
@@ -98,16 +144,56 @@ body {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Container for buttons */
+/* Advanced Section */
+.advanced-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 4px;
+}
+
+.advanced-section.hidden {
+    display: none;
+}
+
+.advanced-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #84cc16;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.advanced-divider::before,
+.advanced-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px dashed #bef264;
+}
+
+.advanced-divider span {
+    padding: 0 8px;
+}
+
+/* Actions Wrapper at bottom */
+.actions-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 24px;
+}
+
 .action-buttons { 
     display: flex; 
     gap: 10px; 
-    margin-top: auto; 
 }
 
 .action-buttons button { 
     flex: 1; 
-    padding: 16px 10px; 
+    padding: 14px 10px; 
     border-radius: 8px; 
     font-weight: 600; 
     font-size: 0.95rem; 
@@ -116,32 +202,71 @@ body {
     border: none; 
 }
 
-/* Update primary button sizing for flexbox */
+/* Primary Render Button (Blue) */
 .btn-primary { 
-    background: #3b82f6; color: #ffffff; 
+    background: #3b82f6; 
+    color: #ffffff; 
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2); 
 }
 .btn-primary:hover:not(:disabled) { 
-    background: #2563eb; transform: translateY(-1px); 
+    background: #2563eb; 
+    transform: translateY(-1px); 
     box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3); 
 }
 .btn-primary:disabled { 
-    background: #e5e7eb; color: #9ca3af; 
-    cursor: not-allowed; box-shadow: none; transform: none; 
+    background: #e5e7eb; 
+    color: #9ca3af; 
+    cursor: not-allowed; 
+    box-shadow: none; 
+    transform: none; 
 }
 
 /* Secondary Export Button (Green) */
 .btn-secondary { 
-    background: #10b981; color: #ffffff; 
+    background: #10b981; 
+    color: #ffffff; 
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); 
 }
 .btn-secondary:hover:not(:disabled) { 
-    background: #059669; transform: translateY(-1px); 
+    background: #059669; 
+    transform: translateY(-1px); 
     box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3); 
 }
 .btn-secondary:disabled { 
-    background: #e5e7eb; color: #9ca3af; 
-    cursor: not-allowed; box-shadow: none; transform: none; 
+    background: #e5e7eb; 
+    color: #9ca3af; 
+    cursor: not-allowed; 
+    box-shadow: none; 
+    transform: none; 
+}
+
+/* Full width NIfTI Export Button (Indigo) */
+.btn-nifti {
+    width: 100%;
+    padding: 14px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    background: #6366f1;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.btn-nifti:hover:not(:disabled) {
+    background: #4f46e5;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+}
+
+.btn-nifti:disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
 }
 
 /* 3D Viewer */
@@ -193,7 +318,6 @@ body {
     0% {
         transform: rotate(0deg);
     }
-
     100% {
         transform: rotate(360deg);
     }
