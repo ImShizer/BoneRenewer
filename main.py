@@ -187,7 +187,7 @@ if __name__ == '__main__':
     api = Api()
 
     webview.create_window(
-        title='DICOM to STL & NIfTI Studio',
+        title='BoneRenewer',
         url='web/index.html',
         js_api=api,
         width=1200,
