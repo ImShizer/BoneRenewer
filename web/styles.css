@@ -186,58 +186,87 @@ body {
     margin-top: 24px;
 }
 
-.action-buttons { 
-    display: flex; 
-    gap: 10px; 
+/* Diagnostics Button (Blue Gradient/Accent) */
+.btn-diagnostics {
+    width: 100%;
+    padding: 14px 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    background: #2563eb;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
 }
 
-.action-buttons button { 
-    flex: 1; 
-    padding: 14px 10px; 
-    border-radius: 8px; 
-    font-weight: 600; 
-    font-size: 0.95rem; 
-    cursor: pointer; 
-    transition: all 0.3s ease; 
-    border: none; 
+.btn-diagnostics:hover:not(:disabled) {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+
+.btn-diagnostics:disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-buttons button {
+    flex: 1;
+    padding: 14px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
 }
 
 /* Primary Render Button (Blue) */
-.btn-primary { 
-    background: #3b82f6; 
-    color: #ffffff; 
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2); 
+.btn-primary {
+    background: #3b82f6;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
-.btn-primary:hover:not(:disabled) { 
-    background: #2563eb; 
-    transform: translateY(-1px); 
-    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3); 
+.btn-primary:hover:not(:disabled) {
+    background: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
 }
-.btn-primary:disabled { 
-    background: #e5e7eb; 
-    color: #9ca3af; 
-    cursor: not-allowed; 
-    box-shadow: none; 
-    transform: none; 
+.btn-primary:disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
 }
 
 /* Secondary Export Button (Green) */
-.btn-secondary { 
-    background: #10b981; 
-    color: #ffffff; 
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); 
+.btn-secondary {
+    background: #10b981;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }
-.btn-secondary:hover:not(:disabled) { 
-    background: #059669; 
-    transform: translateY(-1px); 
-    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3); 
+.btn-secondary:hover:not(:disabled) {
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
 }
-.btn-secondary:disabled { 
-    background: #e5e7eb; 
-    color: #9ca3af; 
-    cursor: not-allowed; 
-    box-shadow: none; 
-    transform: none; 
+.btn-secondary:disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
 }
 
 /* Full width NIfTI Export Button (Indigo) */

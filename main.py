@@ -4,6 +4,7 @@ import shutil
 import webview
 import numpy as np
 from converter import DicomConverter, STLExporter, NiftiHandler
+from diagnostics import DiagnosticEngine
 
 # PyInstaller compatibility
 if hasattr(sys, '_MEIPASS'):
@@ -24,10 +25,14 @@ class Api:
         self.cached_stl = os.path.join(self.output_dir, 'solid_bone.stl')
         self.cached_nii = os.path.join(self.output_dir, 'solid_bone.nii.gz')
 
+        self.diagnostic_engine = DiagnosticEngine()
+        self.last_mask = None
+        self.last_spacing = None
+
     def ask_folder_path(self):
         """Native DICOM folder picker."""
         result = webview.windows[0].create_file_dialog(
-            webview.FOLDER_DIALOG,
+            webview.FileDialog.FOLDER,  # Исправлено предупреждение deprecation
             directory=get_user_dir()
         )
         return result[0] if result and len(result) > 0 else None
@@ -51,8 +56,7 @@ class Api:
                 bone_search_iters=int(iterations_val),
                 step_size=1
             )
-            # Generates STL and caches paired .nii.gz simultaneously
-            converter.convert(export_nifti_path=self.cached_nii)
+            self.last_mask, self.last_spacing = converter.convert(export_nifti_path=self.cached_nii)
 
             return {"status": "success", "file": "./output/solid_bone.stl"}
         except Exception as e:
@@ -90,19 +94,16 @@ class Api:
             if not os.path.exists(nifti_path):
                 return {"status": "error", "message": "NIfTI file does not exist."}
 
-            volume, spacing, sitk_img = NiftiHandler.load(nifti_path)
+            self.last_mask, self.last_spacing, _ = NiftiHandler.load(nifti_path)
 
-            # Real density values
-            if volume.dtype == bool or np.max(volume) <= 1:
-                mask = volume > 0
+            if self.last_mask.dtype == bool or np.max(self.last_mask) <= 1:
+                mask = self.last_mask > 0
             else:
-                mask = volume >= 450.0
+                mask = self.last_mask >= 450.0
 
-            # Build mesh and cache STL
-            verts, faces, normals = STLExporter.generate_mesh(mask, spacing)
+            verts, faces, normals = STLExporter.generate_mesh(mask, self.last_spacing)
             STLExporter.export(verts, faces, normals, self.cached_stl)
 
-            # Nifti cache
             shutil.copy(nifti_path, self.cached_nii)
 
             return {"status": "success", "file": "./output/solid_bone.stl"}
@@ -110,26 +111,33 @@ class Api:
             print(f"[NIfTI Render Error]: {e}")
             return {"status": "error", "message": str(e)}
 
+    def start_diagnostics(self):
+        """API метод для кнопки 'Start diagnostics'."""
+        try:
+            return self.diagnostic_engine.run_diagnostics(
+                cached_stl_path=self.cached_stl,
+                cached_nii_path=self.cached_nii,
+                last_mask=self.last_mask,
+                last_spacing=self.last_spacing
+            )
+        except Exception as e:
+            print(f"[Diagnostics Error]: {e}")
+            return {"status": "error", "message": str(e)}
+
     def export_nifti(self):
         """Saves current volume to user-selected NIfTI path."""
         if not os.path.exists(self.cached_nii):
             return {"status": "error", "message": "No NIfTI data available for export."}
 
-        # Valid file types for NIfTI export
         result = webview.windows[0].create_file_dialog(
             webview.SAVE_DIALOG,
             directory=get_user_dir(),
             save_filename='solid_bone.nii.gz',
-            file_types=('Compressed Archive (*.gz)', 'NIfTI (*.nii)', 'All Files (*.*)')
+            file_types=('NIfTI Compressed (*.nii.gz)', 'NIfTI (*.nii)', 'All Files (*.*)')
         )
 
         if result and len(result) > 0:
             dest_path = result if isinstance(result, str) else result[0]
-            
-            # Saving nii.gz directly
-            if not dest_path.endswith('.nii.gz') and not dest_path.endswith('.nii'):
-                dest_path += '.nii.gz'
-
             try:
                 shutil.copy(self.cached_nii, dest_path)
                 return {"status": "success", "path": dest_path}
@@ -154,28 +162,6 @@ class Api:
             dest_path = result if isinstance(result, str) else result[0]
             try:
                 shutil.copy(self.cached_stl, dest_path)
-                return {"status": "success", "path": dest_path}
-            except Exception as e:
-                return {"status": "error", "message": str(e)}
-
-        return {"status": "cancelled"}
-
-    def export_nifti(self):
-        """Saves current volume to user-selected NIfTI path."""
-        if not os.path.exists(self.cached_nii):
-            return {"status": "error", "message": "No NIfTI data available for export."}
-
-        result = webview.windows[0].create_file_dialog(
-            webview.SAVE_DIALOG,
-            directory=get_user_dir(),
-            save_filename='solid_bone.nii.gz',
-            file_types=('NIfTI Compressed (*.nii.gz)', 'NIfTI (*.nii)', 'All Files (*.*)')
-        )
-
-        if result and len(result) > 0:
-            dest_path = result if isinstance(result, str) else result[0]
-            try:
-                shutil.copy(self.cached_nii, dest_path)
                 return {"status": "success", "path": dest_path}
             except Exception as e:
                 return {"status": "error", "message": str(e)}

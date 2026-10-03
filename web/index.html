@@ -26,7 +26,7 @@
         <div class="left-panel">
             <div class="panel-content">
                 <h2 class="panel-title" id="scan-title">No data loaded</h2>
-                
+
                 <div class="form-group">
                     <label class="form-label">Data Series</label>
                     <select class="form-control" id="series-select" disabled>
@@ -59,6 +59,7 @@
 
             <!-- Bottom Action Buttons -->
             <div class="actions-wrapper">
+                <button class="btn-diagnostics" id="btn-diagnostics" disabled>Start diagnostics</button>
                 <div class="action-buttons">
                     <button class="btn-primary" id="render-btn" disabled>Render 3D</button>
                     <button class="btn-secondary" id="export-btn" disabled>Export STL</button>
@@ -67,7 +68,7 @@
             </div>
         </div>
 
-        <!-- Right Panel -->
+        <!-- Right Panel (3D Viewer) -->
         <div class="right-panel">
             <div id="canvas-container"></div>
             <div id="loading-overlay">
