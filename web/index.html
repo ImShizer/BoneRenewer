@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DICOM to STL Converter</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <button class="btn-outline" id="btn-select-folder">Select DICOM Folder</button>
+            <button class="btn-outline btn-outline-purple" id="btn-import-nifti">Import NIfTI</button>
+        </div>
+        <button class="btn-advanced" id="btn-advanced">Advanced</button>
+    </div>
+
+    <div class="main-container">
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <div class="panel-content">
+                <h2 class="panel-title" id="scan-title">No data loaded</h2>
+
+                <div class="form-group">
+                    <label class="form-label">Data Series</label>
+                    <select class="form-control" id="series-select" disabled>
+                        <option value="">Waiting for folder...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Density Threshold (HU)</label>
+                    <input type="number" class="form-control" id="hu-input" value="450" step="10" disabled>
+                </div>
+
+                <!-- Advanced Settings Section (Collapsible) -->
+                <div id="advanced-settings" class="advanced-section hidden">
+                    <div class="advanced-divider">
+                        <span>Advanced ML Settings</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Spongy Low Threshold (HU)</label>
+                        <input type="number" class="form-control" id="low-hu-input" value="220" step="10">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Bone Search Iterations</label>
+                        <input type="number" class="form-control" id="iterations-input" value="6" min="1" max="20" step="1">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Action Buttons -->
+            <div class="actions-wrapper">
+                <button class="btn-diagnostics" id="btn-diagnostics" disabled>Start diagnostics</button>
+                <div class="action-buttons">
+                    <button class="btn-primary" id="render-btn" disabled>Render 3D</button>
+                    <button class="btn-secondary" id="export-btn" disabled>Export STL</button>
+                </div>
+                <button class="btn-nifti" id="export-nifti-btn" disabled>Export NIfTI (.nii.gz)</button>
+            </div>
+        </div>
+
+        <!-- Right Panel (3D Viewer) -->
+        <div class="right-panel">
+            <div id="canvas-container"></div>
+            <div id="loading-overlay">
+                <div class="spinner"></div>
+                <span id="loading-text">Converting DICOM to STL...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Required for importing Three.js modules -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module" src="view_3d.js"></script>
+</body>
+</html>
