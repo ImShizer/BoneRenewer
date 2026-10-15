@@ -5,6 +5,7 @@ import webview
 import numpy as np
 from converter import DicomConverter, STLExporter, NiftiHandler
 from diagnostics import DiagnosticEngine
+from defect_generator import DefectGenerator
 
 # PyInstaller compatibility
 if hasattr(sys, '_MEIPASS'):
@@ -28,11 +29,16 @@ class Api:
         self.diagnostic_engine = DiagnosticEngine()
         self.last_mask = None
         self.last_spacing = None
+        
+        # Tracks the currently displayed defect model for diagnostics
+        self.active_mask = None
+        self.active_stl = None
+        self.defects_cache = {}
 
     def ask_folder_path(self):
         """Native DICOM folder picker."""
         result = webview.windows[0].create_file_dialog(
-            webview.FileDialog.FOLDER,  # Исправлено предупреждение deprecation
+            webview.FileDialog.FOLDER,
             directory=get_user_dir()
         )
         return result[0] if result and len(result) > 0 else None
@@ -167,6 +173,55 @@ class Api:
                 return {"status": "error", "message": str(e)}
 
         return {"status": "cancelled"}
+
+    def generate_defects(self):
+            """Generates procedural defects and caches their masks for diagnostics."""
+            if self.last_mask is None or self.last_spacing is None:
+                return {"status": "error", "message": "Render a bone model first!"}
+    
+            try:
+                defects = DefectGenerator.generate_all_defects(
+                    mask=self.last_mask,
+                    spacing=self.last_spacing,
+                    output_dir=self.output_dir,
+                    baseline_stl_path=self.cached_stl
+                )
+                
+                # Cache masks and STLs per defect ID
+                self.defects_cache = {d["id"]: (d["mask"], d["file"].replace("./output", self.output_dir)) for d in defects}
+                self.active_mask = self.last_mask
+                self.active_stl = self.cached_stl
+    
+                # Strip heavy NumPy masks from JSON payload sent to JS
+                web_defects = [{k: v for k, v in d.items() if k != "mask"} for d in defects]
+    
+                return {"status": "success", "defects": web_defects}
+            except Exception as e:
+                print(f"[Defect Generator Error]: {e}")
+                return {"status": "error", "message": str(e)}
+
+    def select_defect(self, defect_id):
+        """Switches the active volume for diagnostics when user browses defects."""
+        if defect_id in self.defects_cache:
+            self.active_mask, self.active_stl = self.defects_cache[defect_id]
+            return {"status": "success"}
+        return {"status": "error", "message": "Defect ID not found."}
+
+    def start_diagnostics(self):
+        """Runs diagnostics on the currently active volume (baseline or defect)."""
+        try:
+            target_stl = self.active_stl if self.active_stl else self.cached_stl
+            target_mask = self.active_mask if self.active_mask is not None else self.last_mask
+
+            return self.diagnostic_engine.run_diagnostics(
+                cached_stl_path=target_stl,
+                cached_nii_path=self.cached_nii,
+                last_mask=target_mask,
+                last_spacing=self.last_spacing
+            )
+        except Exception as e:
+            print(f"[Diagnostics Error]: {e}")
+            return {"status": "error", "message": str(e)}
 
 
 if __name__ == '__main__':

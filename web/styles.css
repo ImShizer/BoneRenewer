@@ -186,8 +186,26 @@ body {
     margin-top: 24px;
 }
 
-/* Diagnostics Button (Blue Gradient/Accent) */
-.btn-diagnostics {
+/* Even button line 50% / 50% */
+.action-row {
+    display: flex;
+    gap: 10px;
+}
+
+.action-row button {
+    flex: 1;
+    padding: 12px 6px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: none;
+    white-space: nowrap;
+}
+
+/* 1. Render 3D (Blue) */
+.btn-primary {
     width: 100%;
     padding: 14px 10px;
     border-radius: 8px;
@@ -195,53 +213,18 @@ body {
     font-size: 0.95rem;
     cursor: pointer;
     border: none;
-    transition: all 0.3s ease;
-    background: #2563eb;
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-}
-
-.btn-diagnostics:hover:not(:disabled) {
-    background: #1d4ed8;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
-}
-
-.btn-diagnostics:disabled {
-    background: #e5e7eb;
-    color: #9ca3af;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
-}
-
-.action-buttons {
-    display: flex;
-    gap: 10px;
-}
-
-.action-buttons button {
-    flex: 1;
-    padding: 14px 10px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: none;
-}
-
-/* Primary Render Button (Blue) */
-.btn-primary {
+    transition: all 0.25s ease;
     background: #3b82f6;
     color: #ffffff;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
 }
+
 .btn-primary:hover:not(:disabled) {
     background: #2563eb;
     transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.35);
 }
+
 .btn-primary:disabled {
     background: #e5e7eb;
     color: #9ca3af;
@@ -250,17 +233,19 @@ body {
     transform: none;
 }
 
-/* Secondary Export Button (Green) */
+/* 2. Export STL (Emerald Green) */
 .btn-secondary {
     background: #10b981;
     color: #ffffff;
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }
+
 .btn-secondary:hover:not(:disabled) {
     background: #059669;
     transform: translateY(-1px);
     box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
 }
+
 .btn-secondary:disabled {
     background: #e5e7eb;
     color: #9ca3af;
@@ -269,16 +254,8 @@ body {
     transform: none;
 }
 
-/* Full width NIfTI Export Button (Indigo) */
+/* 3. Export NIfTI (Indigo) */
 .btn-nifti {
-    width: 100%;
-    padding: 14px 10px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    border: none;
-    transition: all 0.3s ease;
     background: #6366f1;
     color: #ffffff;
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
@@ -291,6 +268,48 @@ body {
 }
 
 .btn-nifti:disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* 4. Defects Generator (Amber Orange) */
+.btn-deform {
+    background: #f59e0b;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+}
+
+.btn-deform:hover:not(:disabled) {
+    background: #d97706;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3);
+}
+
+.btn-deform:disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* 5. Diagnostics (Deep Blue) */
+.btn-diagnostics {
+    background: #2563eb;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.btn-diagnostics:hover:not(:disabled) {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+.btn-diagnostics:disabled {
     background: #e5e7eb;
     color: #9ca3af;
     cursor: not-allowed;
@@ -341,6 +360,130 @@ body {
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-bottom: 16px;
+}
+
+.defect-nav {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 10px 16px;
+    z-index: 50;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.defect-nav.hidden {
+    display: none;
+}
+
+.nav-arrow-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #1e293b;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.nav-arrow-btn:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+    color: #0f172a;
+}
+
+.defect-meta {
+    display: flex;
+    flex-direction: column;
+    min-width: 185px;
+    text-align: center;
+}
+
+#defect-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#defect-badge {
+    font-size: 11px;
+    font-weight: 500;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+.defect-nav-divider {
+    width: 1px;
+    height: 28px;
+    background: #e2e8f0;
+}
+
+/* Red Defect Zone Toggle Button */
+.zone-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+}
+
+.zone-toggle-btn:hover:not(:disabled) {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.zone-toggle-btn.active {
+    background: #fef2f2;
+    border-color: #fca5a5;
+    color: #b91c1c;
+}
+
+.zone-toggle-btn.active:hover:not(:disabled) {
+    background: #fee2e2;
+    border-color: #f87171;
+}
+
+.zone-toggle-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.zone-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #94a3b8;
+    transition: background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.zone-toggle-btn.active .zone-dot {
+    background: #ef4444;
+    box-shadow: 0 0 6px rgba(239, 68, 68, 0.65);
 }
 
 @keyframes spin {

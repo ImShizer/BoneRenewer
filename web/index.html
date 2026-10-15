@@ -59,18 +59,37 @@
 
             <!-- Bottom Action Buttons -->
             <div class="actions-wrapper">
-                <button class="btn-diagnostics" id="btn-diagnostics" disabled>Start diagnostics</button>
-                <div class="action-buttons">
-                    <button class="btn-primary" id="render-btn" disabled>Render 3D</button>
+                <button class="btn-primary" id="render-btn" disabled>Render 3D</button>
+                <div class="action-row">
                     <button class="btn-secondary" id="export-btn" disabled>Export STL</button>
+                    <button class="btn-nifti" id="export-nifti-btn" disabled>Export NIfTI</button>
                 </div>
-                <button class="btn-nifti" id="export-nifti-btn" disabled>Export NIfTI (.nii.gz)</button>
+                <div class="action-row">
+                    <button class="btn-deform" id="btn-deform" disabled>Defects</button>
+                    <button class="btn-diagnostics" id="btn-diagnostics" disabled>Diagnostics</button>
+                </div>
             </div>
         </div>
 
         <!-- Right Panel (3D Viewer) -->
         <div class="right-panel">
             <div id="canvas-container"></div>
+            
+            <!-- Floating Defect Navigation (Bottom-Right) -->
+            <div id="defect-nav" class="defect-nav hidden">
+                <button class="nav-arrow-btn" id="defect-prev-btn" title="Previous defect">&#8592;</button>
+                <div class="defect-meta">
+                    <span id="defect-title">Spherical Cavity</span>
+                    <span id="defect-badge">1 / 3</span>
+                </div>
+                <button class="nav-arrow-btn" id="defect-next-btn" title="Next defect">&#8594;</button>
+                <div class="defect-nav-divider"></div>
+                <button class="zone-toggle-btn active" id="defect-zone-btn" title="Show/Hide excised red defect zone">
+                    <span class="zone-dot"></span>
+                    <span id="defect-zone-label">Red Zone</span>
+                </button>
+            </div>
+
             <div id="loading-overlay">
                 <div class="spinner"></div>
                 <span id="loading-text">Converting DICOM to STL...</span>
@@ -88,6 +107,10 @@
         }
     </script>
 
-    <script type="module" src="view_3d.js"></script>
+    <!-- Importing modules -->
+    <script type="module" src="scene.js"></script>
+    <script type="module" src="prosthetics.js"></script>
+    <script type="module" src="defects.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
